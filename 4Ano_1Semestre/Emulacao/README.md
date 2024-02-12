@@ -6,11 +6,8 @@ Este repositório contém todos os materiais, códigos, e documentações desenv
 O projeto foca na monitorização de diversos parâmetros relacionados à saúde em ambientes urbanos, como qualidade do ar, poluição sonora, temperatura e humidade, utilizando uma infraestrutura IoT avançada.
 
 ## Estrutura do Repositório
-- `/Documentação` - Relatórios e documentações técnicas.
-- `/Códigos` - Scripts e códigos fonte utilizados no projeto.
-  - `/CupCarbon` - Simulação da rede de sensores.
-  - `/GNS3` - Configurações e arquivos do GNS3.
-  - `/Scripts` - Códigos de backend e frontend para a plataforma IoT.
+- `/CupCarbon` - Simulação da rede de sensores.
+- `/GNS3` - Configurações e arquivos do GNS3.
 
 ## Tecnologias Utilizadas
 - CupCarbon: Simulação da rede de sensores IoT.
