@@ -1,0 +1,24 @@
+zone "cloud1.local" {
+    type master;
+    file "/etc/bind/cloud1.local.db";
+};
+
+zone "cloud2.local" {
+    type master;
+    file "/etc/bind/cloud2.local.db";
+};
+
+zone "cloud1" {
+    type master;
+    file "/etc/bind/cloud1.db";
+};
+
+zone "cloud2" {
+    type master;
+    file "/etc/bind/cloud2.db";
+};
+
+zone "emulacao.pt" {
+    type master;
+    file "/etc/bind/emulacao.pt.db";
+};

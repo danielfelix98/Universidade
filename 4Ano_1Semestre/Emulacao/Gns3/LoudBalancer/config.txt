@@ -1,0 +1,55 @@
+# Arquivo de configuração NGINX: nginx.conf
+
+# Configurações gerais
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /var/run/nginx.pid;
+
+# Configurações dos eventos
+events {
+    worker_connections 1024;
+}
+
+# Configurações HTTP
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    # Balanceamento de carga para servidores HTTP
+    upstream http_servers {
+        server 10.0.1.18;  # Endereço do servidor HTTP
+        #parte loudbalancer 2
+        #server 10.0.2.18;  # Endereço do servidor HTTP
+    }
+
+    # Configurações do servidor para encaminhar requisições para o grupo upstream
+    server {
+        listen 80;  # Ouvindo na porta 80 para HTTP
+        location / {
+            proxy_pass http://http_servers;
+        }
+    }
+}
+
+# Configurações para o balanceamento de carga MQTT
+stream {
+    # Definindo os brokers MQTT
+    upstream mqtt_brokers {
+        server 10.0.1.15:1883;  # 1
+        server 10.0.1.25:1883;  # 2
+        #parte do loudbalancer 2
+        #server 10.0.2.15:1883;  # 3
+        #server 10.0.2.25:1883;  # 4
+    }
+
+    # Configurando o servidor para escutar na porta MQTT padrão e encaminhar para os brokers
+    server {
+        listen 1883;  # Porta MQTT padrão
+        proxy_pass mqtt_brokers;
+    }
+}

@@ -1,0 +1,19 @@
+CupCarbon v. Twin IoT 6.51
+----------------
+name:emulacao_v1
+zoom:2
+centerposition_la:41.45158059411909
+centerposition_lo:-8.291365206241608
+map:0
+display_details:true
+draw_radio_links:false
+draw_sensor_arrows:true
+radio_links_color:1
+draw_marker_arrows:false
+display_rl_distance:true
+propagation:false
+display_marker_distance:false
+display_radio_messages:false
+draw_script_file_name:true
+display_print_messages:true
+display_all_routes:false

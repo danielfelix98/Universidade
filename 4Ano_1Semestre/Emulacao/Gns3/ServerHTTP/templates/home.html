@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interface de Sensores</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+
+    .custom-header {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .custom-table, .grafico-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+
+    .maximized {
+      width: 100%;
+      height: 500px; /* Ajuste a altura conforme necessário */
+    }
+
+    .btn-maximize {
+      float: right;
+      margin-top: -40px; /* Ajuste a posição conforme necessário */
+    }
+  </style>
+</head>
+<body>
+  <header class="custom-header">
+    <h1>Bem-vindo ao Dashboard de Sensores</h1>
+    <form action="/logout" method="post">
+        <button type="submit" class="btn btn-danger">Sair</button>
+    </form>
+  </header>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6 grafico-container">
+        <h2>Gráfico de Temperatura</h2>
+        <canvas id="graficoTemperatura"></canvas>
+      </div>
+      <div class="col-md-6 grafico-container">
+        <h2>Gráfico de Som</h2>
+        <canvas id="graficoSom"></canvas>
+      </div>
+      <div class="col-md-6 grafico-container">
+        <h2>Gráfico de CO2</h2>
+        <canvas id="graficoCO2"></canvas>
+      </div>
+      <div class="col-md-6 grafico-container">
+        <h2>Gráfico de Humidade</h2>
+        <canvas id="graficoHumidade"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 custom-table">
+        <h2>Últimas Entradas Normais</h2>
+        <div class="table-responsive">
+          <table id="tabela-entradas-normais" class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th>Área</th>
+                <th>Data/Hora</th>
+                <th>Temperatura</th>
+                <th>Som</th>
+                <th>CO2</th>
+                <th>Humidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dados preenchidos pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6 custom-table">
+        <h2>Últimos Alertas</h2>
+        <div class="table-responsive">
+          <table id="tabela-alertas" class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th>Área</th>
+                <th>Tipo de Alerta</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dados preenchidos pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function criarGraficos(dados) {
+      const criarGrafico = (canvasId, label, data, backgroundColor, borderColor) => {
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        return new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: dados.map(d => new Date(d.timestamp).toLocaleTimeString()).reverse(),
+            datasets: [{
+              label: label,
+              data: data.reverse(),
+              backgroundColor: backgroundColor,
+              borderColor: borderColor,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      };
+
+      criarGrafico('graficoTemperatura', 'Temperatura', dados.map(d => d.Temperatura),
+                   'rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 1)');
+      criarGrafico('graficoSom', 'Som', dados.map(d => d.Som),
+                   'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
+      criarGrafico('graficoCO2', 'CO2', dados.map(d => d.CO2),
+                   'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+      criarGrafico('graficoHumidade', 'Humidade', dados.map(d => d.Humidade),
+                   'rgba(153, 102, 255, 0.2)', 'rgba(153, 102, 255, 1)');
+    }
+
+    function atualizarTabela() {
+      $.getJSON('/dados-sensores', function(data) {
+          var htmlEntradas = '';
+          data.entradas_normais.forEach(function(entrada) {
+              htmlEntradas += '<tr>' +
+                              '<td>' + entrada.area + '</td>' +
+                              '<td>' + new Date(entrada.timestamp).toLocaleString() + '</td>' +
+                              '<td>' + entrada.Temperatura + '</td>' +
+                              '<td>' + entrada.Som + '</td>' +
+                              '<td>' + entrada.CO2 + '</td>' +
+                              '<td>' + entrada.Humidade + '</td>' +
+                              '</tr>';
+          });
+          $('#tabela-entradas-normais tbody').html(htmlEntradas);
+
+          var htmlAlertas = '';
+          data.alertas.forEach(function(alerta) {
+              htmlAlertas += '<tr>' +
+                              '<td>' + alerta.area + '</td>' +
+                              '<td>' + alerta.tipo_alerta + '</td>' +
+                              '<td>' + alerta.valor + '</td>' +
+                              '</tr>';
+          });
+          $('#tabela-alertas tbody').html(htmlAlertas);
+
+          criarGraficos(data.entradas_normais);
+      });
+    }
+
+    atualizarTabela();
+    setInterval(atualizarTabela, 60000);
+  </script>
+</body>
+</html>

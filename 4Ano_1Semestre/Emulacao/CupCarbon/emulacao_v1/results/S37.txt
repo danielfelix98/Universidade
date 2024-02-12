@@ -1,0 +1,5 @@
+Area 2-> Alerta Temperatura:#0 
+Area 2-> Alerta Temperatura:#0 
+Area 2-> Alerta Temperatura:#3.84 
+Area 2-> Alerta Temperatura:#3.42 
+Area 2-> Alerta Temperatura:#4.64 
