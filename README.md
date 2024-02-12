@@ -27,7 +27,3 @@ Este projeto visa otimizar as operações de entrega da Xpress Delta, uma empres
 
 ## Agradecimentos
 Agradecimentos especiais aos docentes e todos que direta ou indiretamente contribuíram para a realização deste projeto.
-
-## Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE.md](LICENSE.md) para detalhes.
-
