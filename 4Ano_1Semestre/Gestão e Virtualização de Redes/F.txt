@@ -1,0 +1,8 @@
+#Configuracoes Atuais
+
+udp_port = 12345
+K = 5
+M = 0123456789
+T = 5
+V = 10
+X = 50
